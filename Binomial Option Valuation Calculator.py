@@ -1,5 +1,3 @@
-import math
-
 def listPrint(lst):
     for row in lst:
         rowList = []
@@ -38,11 +36,12 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
     
     checkInputs(s, x, t, r, b, v, nat, typ, prnt, exercisePeriods)
     
-    dt = t/b
-    u = math.exp(v * math.sqrt(dt))
+    exp = 2.718281828459045
+    dt = t / b
+    u = exp ** (v * (dt ** 0.5))
     d = 1/u
     
-    p = (math.exp(r * (dt)) -d)/(u-d)
+    p = (exp ** (r * (dt)) - d) / (u - d)
     q = (1-p)
     
     priceTree = [[s]]
@@ -90,7 +89,7 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
             exercisible = False
         for item in range(len(answerTree[rowIndex])):
             intrinsicValue = IVTree[rowIndex][item]
-            discountedValue = math.exp(-r * dt) * (p * answerTree[rowIndex + 1][item + 1] + q * answerTree[rowIndex + 1][item])
+            discountedValue = exp ** (-r * dt) * (p * answerTree[rowIndex + 1][item + 1] + q * answerTree[rowIndex + 1][item])
 
             if exercisible == False:
                 answerTree[rowIndex][item] = discountedValue
@@ -109,3 +108,5 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
         print('The option value at each node are:')
         listPrint(answerTree)
         print(f'The fair value of the {nat} {typ} Option is ${round(answerTree[0][0], 4)}')
+    
+    return answerTree[0][0], priceTree, answerTree
