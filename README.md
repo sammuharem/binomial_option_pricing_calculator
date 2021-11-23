@@ -45,3 +45,9 @@ Option Nationality | nat | 'A' for American (default), 'B' for Bermudan, 'E' for
 Option Type | typ | 'C' for Call (default), 'P' for Put
 Print Results |prnt| True to enable printing (default), False to disable
 Exercisible Periods |exP | The branches that a Bermudan option can be exercised
+
+## Related Projects ##
+Beta calculator with stock data downloader: https://github.com/sammuhrai/beta-calculator
+
+## Disclaimer ##
+Script is for educational purposes and is not to be taken as financial advice.
