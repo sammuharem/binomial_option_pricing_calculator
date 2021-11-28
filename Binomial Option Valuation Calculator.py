@@ -40,19 +40,16 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
     dt = t / b
     u = exp ** (v * (dt ** 0.5))
     d = 1/u
-    
     p = (exp ** (r * (dt)) - d) / (u - d)
     q = (1-p)
-    
-    priceTree = [[s]]
-    for row in range(b):
+        
+    priceTree = [[s], [s * d, s * u]]
+    for row in range(1, b):
         newRow = []
+        newRow = [priceTree[row][0] * d]
         for item in priceTree[row]:
             newRow.append(item * u) 
-            newRow.append(item * d) 
-            
-        newRow = sorted(set(newRow))
-        priceTree.append(newRow)        
+        priceTree.append(newRow)  
         
     IVTree =[]
     for row in priceTree:
@@ -61,8 +58,7 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
             if typ == 'C':
                 newRow.append(max(item-x,0))
             elif typ == 'P':
-                newRow.append(max(x-item,0))
-                
+                newRow.append(max(x-item,0))         
         IVTree.append(newRow)
     
     answerTree = []
