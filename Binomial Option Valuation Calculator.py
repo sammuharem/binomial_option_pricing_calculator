@@ -1,14 +1,6 @@
-def listPrint(lst):
-    for row in lst:
-        rowList = []
-        for item in row:
-            rowList.append(round(item, 4))
-        print(rowList)
-    print('\n')
-    
 def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePeriods = []):
     """
-    Calculates the fair option price of a simple Option inputs are as follows:
+    Calculates the fair option price of a simple option, inputs are as follows:
     s: The current stock price
     x: The strike price of the option
     t: The time in years until maturity of the option
@@ -19,7 +11,11 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
     typ: 'C' for Call (default) or 'P' for Put
     prnt: True (default) to print variables to console, False to disable
     exercisePeriods: If option is Bermudan enter branches it is exercisable as a list.
+    
+    Returns:
+    Option Value, Price Tree, Answer Tree
     """
+    
     if min(s,x,t,b,v) <= 0:
         raise Exception('Inputs are Invalid: Use a positive value for s, x, t, b and v')
     
@@ -41,7 +37,6 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
         
     priceTree = [[s], [s * d, s * u]]
     for row in range(1, b):
-        newRow = []
         newRow = [priceTree[row][0] * d]
         for item in priceTree[row]:
             newRow.append(item * u) 
@@ -63,11 +58,7 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
         for item in priceTree[rowIndex]:
             newRow.append(0)
         answerTree.append(newRow)
-    
-    tempList = []
-    for item in IVTree[b]:
-        tempList.append(item)
-    answerTree.append(tempList)
+    answerTree.append(IVTree[b])
 
     if nat == 'A':
         exercisePeriods = list(range(b+1))
@@ -83,22 +74,18 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
             intrinsicValue = IVTree[rowIndex][item]
             discountedValue = exp ** (-r * dt) * (p * answerTree[rowIndex + 1][item + 1] + q * answerTree[rowIndex + 1][item])
 
-            if exercisible == False:
-                answerTree[rowIndex][item] = discountedValue
-            
+            if exercisible == False or discountedValue >= intrinsicValue:
+                answerTree[rowIndex][item] = discountedValue         
             else: 
-                if intrinsicValue > discountedValue:
                     answerTree[rowIndex][item] = intrinsicValue
-                else:
-                    answerTree[rowIndex][item] = discountedValue
     
     if prnt == True:
-        print(f'The up-factor is {round(u, 4)} and the down-factor is {round(d, 4)}\n')
-        print(f'The probability of an upward price movement is {round(p, 4)}\n')
-        print('The stock price at each node is:')
-        listPrint(priceTree)
-        print('The option value at each node are:')
-        listPrint(answerTree)
-        print(f'The fair value of the {nat} {typ} Option is ${round(answerTree[0][0], 4)}')
+        print(f'The up-factor is {round(u, 4)} and the down-factor is {round(d, 4)}')
+        print(f'\nThe probability of an upward price movement is {round(p, 4)}')
+        print('\nThe stock price at each node is:')
+        [print(['{0:.4f}'.format(item) for item in lst]) for lst in priceTree]
+        print('\nThe option value at each node are:')
+        [print(['{0:.4f}'.format(item) for item in lst]) for lst in answerTree]
+        print(f'\nThe fair value of the {nat} {typ} Option is ${round(answerTree[0][0], 4)}')
     
     return answerTree[0][0], priceTree, answerTree
