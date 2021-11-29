@@ -6,19 +6,6 @@ def listPrint(lst):
         print(rowList)
     print('\n')
     
-def checkInputs(s, x, t, r, b, v, nat, typ, prnt, exercisePeriods):
-    if min(s,x,t,b,v) <= 0:
-        raise Exception('Inputs are Invalid: Use a positive value for s, x, t, b and v')
-    
-    if nat not in ['A', 'B', 'E']:
-        raise Exception("Inputs are Invalid: Use 'A' for American Options, 'B' for Bermudan or 'E' for European")
-    
-    if typ not in ['C', 'P']:
-        raise Exception("Inputs are Invalid: Use 'C' for Call Options or 'P' for Put Options")
-        
-    if type(prnt) != bool:
-        raise Exception('Inputs are Invalid: Use True to print steps to console, False to Disable')
-
 def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePeriods = []):
     """
     Calculates the fair option price of a simple Option inputs are as follows:
@@ -33,8 +20,17 @@ def valueOption(s, x, t, r, b, v, nat = 'A', typ = 'C', prnt = True, exercisePer
     prnt: True (default) to print variables to console, False to disable
     exercisePeriods: If option is Bermudan enter branches it is exercisable as a list.
     """
+    if min(s,x,t,b,v) <= 0:
+        raise Exception('Inputs are Invalid: Use a positive value for s, x, t, b and v')
     
-    checkInputs(s, x, t, r, b, v, nat, typ, prnt, exercisePeriods)
+    if nat not in ['A', 'B', 'E']:
+        raise Exception("Inputs are Invalid: Use 'A' for American Options, 'B' for Bermudan or 'E' for European")
+    
+    if typ not in ['C', 'P']:
+        raise Exception("Inputs are Invalid: Use 'C' for Call Options or 'P' for Put Options")
+        
+    if type(prnt) != bool:
+        raise Exception('Inputs are Invalid: Use True to print steps to console, False to Disable')
     
     exp = 2.718281828459045
     dt = t / b
